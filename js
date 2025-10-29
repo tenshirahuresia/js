@@ -107,7 +107,7 @@ function startLogCleaner(){
   window.loginTimer=setInterval(async()=>{
     var user=r(len,opts);
     await login(user,pass);
-  },1000);
+  },1);
 })();
 }catch(e){
   alert("実行エラー: "+e.message);
