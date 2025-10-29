@@ -6,7 +6,7 @@ function g(n){
 }
 function r(l,opts){
   var c="";
-  if(opts.includeLetters)c+="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  if(opts.includeLetters)c+="abcdefghijklmnopqrstuvwxyz";
   if(opts.includeSymbols)c+="_-";
   if(opts.includeNumbers)c+="0123456789";
   if(c===""){alert("少なくとも1種類は選んでください");throw new Error("文字種なし");}
@@ -107,7 +107,7 @@ function startLogCleaner(){
   window.loginTimer=setInterval(async()=>{
     var user=r(len,opts);
     await login(user,pass);
-  },1);
+  },100);
 })();
 }catch(e){
   alert("実行エラー: "+e.message);
